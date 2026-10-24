@@ -1,0 +1,339 @@
+
+'use strict';
+
+console.log('CAMPUS IT SUPPORT REQUEST MANAGER');
+
+// ================================================================
+// PART A: STACK
+// ================================================================
+
+class Stack {
+  constructor() {
+    // Create the internal storage for stack items.
+    this.items = [];
+  }
+
+  // Add an item to the top of the stack.
+  push(element) {
+    this.items.push(element);
+  }
+
+  // Remove and return the top item from the stack.
+  pop() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items.pop();
+  }
+
+  // Return the top item without removing it.
+  peek() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items[this.items.length - 1];
+  }
+
+  // Return true if the stack has no items.
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  // Return the number of items in the stack.
+  size() {
+    return this.items.length;
+  }
+
+  // Return all stack elements as a single string.
+  toString() {
+    return this.items.join(', ');
+  }
+}
+
+console.log('\nPART A: UNDO HISTORY');
+
+const actionHistory = new Stack();
+
+// Add the required undo actions in the given order.
+actionHistory.push('Opened Ticket #101');
+actionHistory.push('Assigned Ticket #101');
+actionHistory.push('Closed Ticket #101');
+
+console.log('Top Action: ' + actionHistory.peek());
+console.log('Undo Action: ' + actionHistory.pop());
+console.log('Remaining Actions: ' + actionHistory.toString());
+console.log('Stack Size: ' + actionHistory.size());
+
+// ================================================================
+// PART B: QUEUE
+// ================================================================
+
+class Queue {
+  constructor() {
+    // Create the internal storage for queue items.
+    this.items = [];
+  }
+
+  // Add an item to the back of the queue.
+  enqueue(element) {
+    this.items.push(element);
+  }
+
+  // Remove and return the front item from the queue.
+  dequeue() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items.shift();
+  }
+
+  // Return the front item without removing it.
+  front() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items[0];
+  }
+
+  // Return true if the queue has no items.
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  // Return the number of items in the queue.
+  size() {
+    return this.items.length;
+  }
+
+  // Return all queue items as a single string.
+  toString() {
+    return this.items.join(', ');
+  }
+}
+
+console.log('\nPART B: WAITING REQUESTS');
+
+const waitingRequests = new Queue();
+
+// Add the waiting requests in arrival order.
+waitingRequests.enqueue('Ticket #201 - Password Reset');
+waitingRequests.enqueue('Ticket #202 - No Internet');
+waitingRequests.enqueue('Ticket #203 - Printer Problem');
+waitingRequests.enqueue('Ticket #204 - Software Installation');
+
+console.log('Next Request: ' + waitingRequests.front());
+console.log('Processed: ' + waitingRequests.dequeue());
+console.log('Processed: ' + waitingRequests.dequeue());
+console.log('Remaining Requests: ' + waitingRequests.toString());
+console.log('Queue Size: ' + waitingRequests.size());
+
+// ================================================================
+// PART C: PRIORITY QUEUE
+// ================================================================
+
+class PriorityQueue {
+  constructor() {
+    // Create the internal storage for queued items.
+    this.items = [];
+  }
+
+  // Insert a request at the correct priority position while preserving arrival order for equal priorities.
+  enqueue(request, priority) {
+    const item = { request, priority };
+    const insertAt = this.items.findIndex(existing => existing.priority > priority);
+
+    if (insertAt === -1) {
+      this.items.push(item);
+    } else {
+      this.items.splice(insertAt, 0, item);
+    }
+  }
+
+  // Remove and return the current highest-priority item.
+  dequeue() {
+    if (this.items.length === 0) {
+      return undefined;
+    }
+    return this.items.shift();
+  }
+
+  // Return the number of items in the priority queue.
+  size() {
+    return this.items.length;
+  }
+
+  // Display every request with its priority.
+  print() {
+    const output = this.items.map(item => `${item.request}, Priority ${item.priority}`).join('\n');
+    console.log(output);
+    return output;
+  }
+}
+
+console.log('\nPART C: URGENT REQUESTS');
+
+const urgentRequests = new PriorityQueue();
+
+// Add the urgent requests in the required order.
+urgentRequests.enqueue('Ticket #301 - Install Browser', 3);
+urgentRequests.enqueue('Ticket #302 - Server Offline', 1);
+urgentRequests.enqueue('Ticket #303 - Faculty PC Failure', 2);
+urgentRequests.enqueue('Ticket #304 - Internet Laboratory Down', 1);
+
+console.log('Initial Priority Order:');
+urgentRequests.print();
+
+const processedPriorityRequest = urgentRequests.dequeue();
+console.log('Processed Priority Request: ' + processedPriorityRequest.request + ', Priority ' + processedPriorityRequest.priority);
+console.log('Remaining Priority Requests:');
+urgentRequests.print();
+
+// ================================================================
+// PART D: LINKED LIST
+// ================================================================
+
+class Node {
+  constructor(element) {
+    // Store the node data and set the next pointer to null.
+    this.element = element;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    // Initialize the list with zero nodes and no head.
+    this.length = 0;
+    this.head = null;
+  }
+
+  // Add a node at the end of the list.
+  append(element) {
+    const node = new Node(element);
+
+    if (this.head === null) {
+      this.head = node;
+    } else {
+      let current = this.head;
+      while (current.next !== null) {
+        current = current.next;
+      }
+      current.next = node;
+    }
+
+    this.length++;
+  }
+
+  // Insert an item at a valid index position.
+  insert(position, element) {
+    if (position < 0 || position > this.length) {
+      return false;
+    }
+
+    const node = new Node(element);
+
+    if (position === 0) {
+      node.next = this.head;
+      this.head = node;
+    } else {
+      let current = this.head;
+      for (let i = 0; i < position - 1; i++) {
+        current = current.next;
+      }
+      node.next = current.next;
+      current.next = node;
+    }
+
+    this.length++;
+    return true;
+  }
+
+  // Remove and return the element at the specified position.
+  removeAt(position) {
+    if (position < 0 || position >= this.length) {
+      return null;
+    }
+
+    let current = this.head;
+
+    if (position === 0) {
+      this.head = current.next;
+    } else {
+      let previous = null;
+      for (let i = 0; i < position; i++) {
+        previous = current;
+        current = current.next;
+      }
+      previous.next = current.next;
+    }
+
+    this.length--;
+    return current.element;
+  }
+
+  // Return the index of the first matching element, or -1 if not found.
+  indexOf(element) {
+    let current = this.head;
+
+    for (let i = 0; i < this.length; i++) {
+      if (current.element === element) {
+        return i;
+      }
+      current = current.next;
+    }
+
+    return -1;
+  }
+
+  // Remove the first matching element by value.
+  remove(element) {
+    const index = this.indexOf(element);
+    if (index === -1) {
+      return null;
+    }
+    return this.removeAt(index);
+  }
+
+  // Return true if the list has no nodes.
+  isEmpty() {
+    return this.length === 0;
+  }
+
+  // Return the number of nodes in the list.
+  size() {
+    return this.length;
+  }
+
+  // Return all elements as a comma-separated string.
+  toString() {
+    let current = this.head;
+    const values = [];
+
+    while (current !== null) {
+      values.push(current.element);
+      current = current.next;
+    }
+
+    return values.join(', ');
+  }
+}
+
+console.log('\nPART D: COMPLETED REQUESTS');
+
+const completedRequests = new LinkedList();
+
+// Append the initial completed requests.
+completedRequests.append('Ticket #401 - Account Activated');
+completedRequests.append('Ticket #402 - Printer Connected');
+completedRequests.append('Ticket #403 - Antivirus Updated');
+
+// Insert the additional requests into the correct positions.
+completedRequests.insert(0, 'Ticket #400 - Computer Diagnosed');
+completedRequests.insert(completedRequests.size(), 'Ticket #405 - Browser Updated');
+
+console.log('Complete List: ' + completedRequests.toString());
+console.log('Index of Ticket #402: ' + completedRequests.indexOf('Ticket #402 - Printer Connected'));
+console.log('Removed at Position 1: ' + completedRequests.removeAt(1));
+console.log('Removed by Value: ' + completedRequests.remove('Ticket #403 - Antivirus Updated'));
+console.log('Final List: ' + completedRequests.toString());
+console.log('Final Size: ' + completedRequests.size());
