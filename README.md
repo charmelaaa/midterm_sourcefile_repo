@@ -7,3 +7,9 @@ laboratory exercises, and hands-on activities.
 
 I created a separate branch to practice editing files,
 committing changes, and merging updates into the main branch.
+
+# Final Midterm Submission
+
+All available midterm JavaScript source files have been
+organized in this repository. This activity also included
+practicing Git commits, branching, and merging.
